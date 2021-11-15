@@ -30,7 +30,21 @@ class HelloWorld(APIView):
     def post(self, request):
         username = request.user
 
-        query = dict([s.split("=") for s in request.META["QUERY_STRING"].split("&")])
+        parameters = request.META["QUERY_STRING"].split("&")
+
+        if not parameters[0]:
+          return Response("Parameters are not present")
+
+        query = dict([s.split("=") for s in parameters])
+        all_fields_present = "isin" in query \
+                              and "size" in query \
+                              and "currency" in query \
+                              and "maturity" in query \
+                              and "lei" in query 
+
+        if not all_fields_present:
+          return Response("Not all parameters are present")
+          
         
         lei = query["lei"]
 
@@ -43,5 +57,6 @@ class HelloWorld(APIView):
 
         b = Bond(**query)
         b.save()
+
         return Response("Bond saved successfully")
 
