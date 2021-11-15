@@ -18,7 +18,12 @@ from django.urls import path
 
 from bonds.views import HelloWorld
 
+# new import 
+from origin import authentication
+from rest_framework.authtoken.views import obtain_auth_token
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HelloWorld.as_view())
+    path('bonds/', HelloWorld.as_view()),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth')
 ]
